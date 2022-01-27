@@ -12,7 +12,6 @@ var snap # snap vector
 var stoppingRunning = false; # purely in charge of switching to the idle animation sooner - to be ignored
 var lastNormal = Vector2.ZERO
 var leftFloor = false
-var buildUp=0
 
 func get_input(delta):
 	var horiz =  Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left") # simplified left-right check
@@ -37,13 +36,6 @@ func get_input(delta):
 		print(addForce)
 		velocity+=addForce # add force from the jump
 	stoppingRunning = (horiz == 0) # if we're not pressing anything, make the idle animation appear sooner
-	if Input.is_action_pressed("ui_down"):
-		buildUp += delta/2
-		buildUp = clamp(buildUp,-1,1)
-		horiz = 0
-	if Input.is_action_just_released("ui_down"):
-		velocity.x=(-1 if $AnimatedSprite.flip_h else 1)*speed_cap*buildUp
-		buildUp=0
 	if velocity.x!=0: # if we're moving horizontally
 		if horiz==0: # but not pressing any direction
 			velocity.x = velocity.x*0.975 # apply medium friction value
@@ -71,19 +63,7 @@ func animate():
 			else:
 				$AnimatedSprite.animation = "run"
 		else:
-			if (buildUp==0):
-				$AnimatedSprite.animation = "idle"
-			elif (buildUp<0.5):
-				$AnimatedSprite.animation = "walk"
-			elif (buildUp<0.8):
-				$AnimatedSprite.animation = "run"
-			else:
-				$AnimatedSprite.animation = "mach"
-			
-			if (buildUp > 0 && buildUp < 0.5):
-				$AnimatedSprite.speed_scale = buildUp*2
-			else:
-				$AnimatedSprite.speed_scale = 1
+			$AnimatedSprite.animation = "idle"
 	else:
 		$AnimatedSprite.animation = "ball" # the ground animations are kept if you run off a slope instead of jumping off it voluntarily
 
@@ -91,7 +71,7 @@ func _physics_process(delta):
 	get_input(delta)
 	if jumping and is_on_floor() and $JumpBufferTimer.time_left <= 0:
 		jumping = false
-	if is_on_floor():
+	if is_on_floor() and !jumping:
 		rotation = $FloorCast.get_collision_normal().angle() + PI/2 # align with floor when we're on it
 	else:
 		rotation = 0 # stay upright when in midair
