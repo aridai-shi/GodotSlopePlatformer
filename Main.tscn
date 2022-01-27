@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://addons/rmsmartshape/shapes/shape_closed.gd" type="Script" id=1]
 [ext_resource path="res://Terrain.gd" type="Script" id=2]
@@ -36,7 +36,7 @@ width = 1.0
 
 [sub_resource type="Resource" id=39]
 script = ExtResource( 9 )
-position = Vector2( 998.358, 415.783 )
+position = Vector2( 833.356, 525.784 )
 point_in = Vector2( -165.65, 21.7091 )
 point_out = Vector2( 409.143, 26.8014 )
 properties = SubResource( 38 )
@@ -205,38 +205,12 @@ width = 1.0
 
 [sub_resource type="Resource" id=65]
 script = ExtResource( 9 )
-position = Vector2( 756.149, 418.334 )
-point_in = Vector2( -115.625, 64.1834 )
-point_out = Vector2( 115.625, -64.1834 )
+position = Vector2( 873.621, 264.554 )
+point_in = Vector2( 200.818, -33.9412 )
+point_out = Vector2( -200.818, 33.9412 )
 properties = SubResource( 64 )
 
 [sub_resource type="Resource" id=66]
-script = ExtResource( 3 )
-texture_idx = 0
-flip = false
-width = 1.0
-
-[sub_resource type="Resource" id=67]
-script = ExtResource( 9 )
-position = Vector2( 910.817, 173.085 )
-point_in = Vector2( 115.191, -10.0429 )
-point_out = Vector2( -256.667, -7.52937 )
-properties = SubResource( 66 )
-
-[sub_resource type="Resource" id=71]
-script = ExtResource( 3 )
-texture_idx = 0
-flip = false
-width = 1.0
-
-[sub_resource type="Resource" id=72]
-script = ExtResource( 9 )
-position = Vector2( 1167.21, 215.878 )
-point_in = Vector2( 0, 0 )
-point_out = Vector2( 0, 0 )
-properties = SubResource( 71 )
-
-[sub_resource type="Resource" id=70]
 script = ExtResource( 4 )
 _points = {
 0: SubResource( 37 ),
@@ -253,15 +227,13 @@ _points = {
 15: SubResource( 59 ),
 16: SubResource( 61 ),
 17: SubResource( 63 ),
-18: SubResource( 65 ),
-19: SubResource( 67 ),
-21: SubResource( 72 )
+22: SubResource( 65 )
 }
-_point_order = [ 3, 16, 17, 12, 13, 14, 15, 18, 2, 21, 19, 11, 9, 6, 4, 5, 0 ]
+_point_order = [ 3, 16, 17, 12, 13, 14, 15, 2, 22, 11, 9, 6, 4, 5, 0 ]
 _constraints = {
 [ 0, 3 ]: 15
 }
-_next_key = 22
+_next_key = 23
 
 [sub_resource type="Resource" id=32]
 script = ExtResource( 7 )
@@ -315,7 +287,7 @@ script = ExtResource( 2 )
 [node name="SS2D_Shape_Closed" type="Node2D" parent="Terrain"]
 script = ExtResource( 1 )
 curve_bake_interval = 30.0
-_points = SubResource( 70 )
+_points = SubResource( 66 )
 material_overrides = {
 }
 shape_material = SubResource( 35 )

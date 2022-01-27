@@ -21,7 +21,7 @@ func get_input(delta):
 	if is_on_floor():
 		$CoyoteTimer.start(0.15)
 		leftFloor = false
-	elif !leftFloor:
+	elif !leftFloor && !jumping:
 		leftFloor = true
 		velocity.x = velocity.rotated(rotation).x # jump off at an angle, no matter the rotation
 	if jump:
@@ -29,11 +29,13 @@ func get_input(delta):
 	if jumpnt && velocity.y < 0:
 		velocity.y = velocity.y*0.55 # half-measure for global jump height
 	if !jumping and $JumpBufferTimer.time_left > 0 and $CoyoteTimer.time_left > 0: # if we hit jump, aren't off the ground yet and weren't in a jumping state before
-		jumping = true
-		velocity.y = jump_speed - abs(velocity.rotated(rotation).x/10)
-
-		velocity.y = velocity.rotated(rotation).y
-		rotation = 0
+		jumping = true # enable jumping state
+		var addForce = Vector2()
+		addForce.y = jump_speed 
+		addForce= addForce.rotated(rotation) # after we rotate, keep the pre-rotation direction
+		rotation = 0 # rotate upright
+		print(addForce)
+		velocity+=addForce # add force from the jump
 	stoppingRunning = (horiz == 0) # if we're not pressing anything, make the idle animation appear sooner
 	if Input.is_action_pressed("ui_down"):
 		buildUp += delta/2
@@ -54,7 +56,6 @@ func get_input(delta):
 			velocity.x = velocity.x*0.99 # apply low friction so the player doesn't rocket off
 	velocity.x+=horiz*run_speed
 	velocity.x = clamp(velocity.x,-speed_cap,speed_cap)
-	print(gravity_off())
 	animate()
 	
 func animate():
