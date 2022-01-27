@@ -1,14 +1,14 @@
 extends KinematicBody2D
 
-var run_speed = 8 # acceleration
-var jump_speed = -480
-var gravity = 1000
+var run_speed = 10 # acceleration
+var jump_speed = -550
+var gravity = 1200
 var velocity = Vector2()
 var jumping = false # in charge of the jumping ""state"" and animations
 var dir = true # in charge of animation direection
 var speed_cap = 1200
-var gravity_speed = 800
-var snap # snap vector
+var gravity_speed = 500
+var snap = Vector2.ZERO # snap vector
 var stoppingRunning = false; # purely in charge of switching to the idle animation sooner - to be ignored
 var lastNormal = Vector2.ZERO
 var leftFloor = false
@@ -33,14 +33,13 @@ func get_input(delta):
 		addForce.y = jump_speed 
 		addForce= addForce.rotated(rotation) # after we rotate, keep the pre-rotation direction
 		rotation = 0 # rotate upright
-		print(addForce)
 		velocity+=addForce # add force from the jump
 	stoppingRunning = (horiz == 0) # if we're not pressing anything, make the idle animation appear sooner
 	if velocity.x!=0: # if we're moving horizontally
 		if horiz==0: # but not pressing any direction
 			velocity.x = velocity.x*0.975 # apply medium friction value
 			if abs(velocity.x)<100 && abs(rotation)<(PI/10): # if we're supposed to be almost still
-				velocity.x=velocity.x*0.9 # apply extra friction
+				velocity.x=velocity.x*0.8 # apply extra friction
 				stoppingRunning = false # let the running animation start up quickly again
 		elif horiz!=velocity.x/abs(velocity.x): # if we're pressing the opposite direction to the one we're moving at
 			velocity.x = velocity.x*0.95 # apply high friction
@@ -75,16 +74,26 @@ func _physics_process(delta):
 		rotation = $FloorCast.get_collision_normal().angle() + PI/2 # align with floor when we're on it
 	else:
 		rotation = 0 # stay upright when in midair
-	snap = global_transform.y * 50 if !jumping else Vector2.ZERO
-	velocity.x = velocity.x if abs(velocity.x)>1 else 0 # removes fractional x velocities that just cause the player to slide when idle
-	var secondaryGravity = 0 if ((is_on_floor() && try_vel(delta).length()<1)||gravity_off()) else gravity # removes fractional y velocities that just cause the player to slide when idle
+	velocity.x = velocity.x if abs(velocity.x)>3 else 0 # removes fractional x velocities that just cause the player to slide when idle
+	var secondaryGravity =  gravity 
+	if is_on_floor():
+		if try_vel(delta).length()<1:
+			secondaryGravity = 0
+	if gravity_off():
+		if !jumping:
+			secondaryGravity = 0
+	snap = global_transform.y * 75 if ((!jumping && -velocity.y<secondaryGravity*delta) || gravity_off()) else Vector2.ZERO
 	velocity = move_and_slide_with_snap(velocity.rotated(rotation)+Vector2(0,secondaryGravity *delta),snap, -transform.y, true) # adding gravity after rotating velocity in order to make it global and factor it into the speed of uphill movement
 	velocity = velocity.rotated(-rotation) # converts velocity back to local after m_a_s_w_s() rotates it
+	$Line2D.points[1] = velocity/20
 	
 func is_on_floor():
 	return $FloorCast.is_colliding() # custom is_on_floor() detection cause the official one doesn't work very well here
 func gravity_off():
-	return abs(velocity.x)>gravity_speed && abs(rotation_degrees)>60 && !jumping
+	print (str(get_tree().get_frame()) + ":" + str(abs(rotation_degrees)))
+	# abs(velocity.x)>gravity_speed &&
+	# add this after `return` to restore gravity check (aka normal gameplay)
+	return abs(rotation_degrees)>60
 func try_vel(delta):
 	var diff = move_and_slide_with_snap(velocity.rotated(rotation)+Vector2(0,gravity *delta),snap, -transform.y, true) # move
 	move_and_slide_with_snap(-velocity.rotated(rotation)-Vector2(0,gravity *delta),snap, -transform.y, true) # undo the move in the exact same frame

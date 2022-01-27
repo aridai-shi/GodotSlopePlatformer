@@ -11,7 +11,6 @@ func _ready():
 	for child in get_children():
 		if child is SS2D_Shape_Closed:
 			var node:SS2D_Shape_Closed = child
-			print("A")
 			add_collision(node)
 			
 			

@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://addons/rmsmartshape/shapes/shape_closed.gd" type="Script" id=1]
 [ext_resource path="res://Terrain.gd" type="Script" id=2]
@@ -121,15 +121,15 @@ properties = SubResource( 50 )
 
 [sub_resource type="Resource" id=52]
 script = ExtResource( 3 )
-texture_idx = 0
+texture_idx = -1
 flip = false
-width = 1.0
+width = 0.7
 
 [sub_resource type="Resource" id=53]
 script = ExtResource( 9 )
-position = Vector2( 258.742, 489.538 )
+position = Vector2( 122.29, 213.918 )
 point_in = Vector2( 0, 0 )
-point_out = Vector2( 39.9788, 0.694885 )
+point_out = Vector2( 116.119, 24.7221 )
 properties = SubResource( 52 )
 
 [sub_resource type="Resource" id=54]
@@ -140,9 +140,9 @@ width = 1.0
 
 [sub_resource type="Resource" id=55]
 script = ExtResource( 9 )
-position = Vector2( 342.647, 491.786 )
-point_in = Vector2( -28.7298, 6.05225 )
-point_out = Vector2( 24.7221, -7.49158 )
+position = Vector2( 284.963, 482.607 )
+point_in = Vector2( -68.9221, -55.4373 )
+point_out = Vector2( 68.9221, 55.4373 )
 properties = SubResource( 54 )
 
 [sub_resource type="Resource" id=56]
@@ -153,64 +153,12 @@ width = 1.0
 
 [sub_resource type="Resource" id=57]
 script = ExtResource( 9 )
-position = Vector2( 399.583, 504.521 )
-point_in = Vector2( -24.722, -8.98984 )
-point_out = Vector2( 24.722, 8.98984 )
+position = Vector2( 843.296, 256.23 )
+point_in = Vector2( 200.818, -33.9412 )
+point_out = Vector2( -306.063, -19.5731 )
 properties = SubResource( 56 )
 
 [sub_resource type="Resource" id=58]
-script = ExtResource( 3 )
-texture_idx = 0
-flip = false
-width = 1.0
-
-[sub_resource type="Resource" id=59]
-script = ExtResource( 9 )
-position = Vector2( 482.739, 503.023 )
-point_in = Vector2( -31.4644, 13.4848 )
-point_out = Vector2( 32.9627, -6.7424 )
-properties = SubResource( 58 )
-
-[sub_resource type="Resource" id=60]
-script = ExtResource( 3 )
-texture_idx = -1
-flip = false
-width = 0.7
-
-[sub_resource type="Resource" id=61]
-script = ExtResource( 9 )
-position = Vector2( 80.3378, 210.172 )
-point_in = Vector2( 0, 0 )
-point_out = Vector2( 0, 0 )
-properties = SubResource( 60 )
-
-[sub_resource type="Resource" id=62]
-script = ExtResource( 3 )
-texture_idx = 0
-flip = false
-width = 1.0
-
-[sub_resource type="Resource" id=63]
-script = ExtResource( 9 )
-position = Vector2( 80.4438, 489.349 )
-point_in = Vector2( 0, 0 )
-point_out = Vector2( 0, 0 )
-properties = SubResource( 62 )
-
-[sub_resource type="Resource" id=64]
-script = ExtResource( 3 )
-texture_idx = 0
-flip = false
-width = 1.0
-
-[sub_resource type="Resource" id=65]
-script = ExtResource( 9 )
-position = Vector2( 873.621, 264.554 )
-point_in = Vector2( 200.818, -33.9412 )
-point_out = Vector2( -200.818, 33.9412 )
-properties = SubResource( 64 )
-
-[sub_resource type="Resource" id=66]
 script = ExtResource( 4 )
 _points = {
 0: SubResource( 37 ),
@@ -221,15 +169,11 @@ _points = {
 6: SubResource( 47 ),
 9: SubResource( 49 ),
 11: SubResource( 51 ),
-12: SubResource( 53 ),
-13: SubResource( 55 ),
-14: SubResource( 57 ),
-15: SubResource( 59 ),
-16: SubResource( 61 ),
-17: SubResource( 63 ),
-22: SubResource( 65 )
+16: SubResource( 53 ),
+17: SubResource( 55 ),
+22: SubResource( 57 )
 }
-_point_order = [ 3, 16, 17, 12, 13, 14, 15, 2, 22, 11, 9, 6, 4, 5, 0 ]
+_point_order = [ 3, 16, 17, 2, 22, 11, 9, 6, 4, 5, 0 ]
 _constraints = {
 [ 0, 3 ]: 15
 }
@@ -279,7 +223,7 @@ render_offset = 0.0
 [node name="Node2D" type="Node2D"]
 
 [node name="KinematicBody2D" parent="." instance=ExtResource( 14 )]
-position = Vector2( 121.021, 464.124 )
+position = Vector2( 35, 176 )
 
 [node name="Terrain" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -287,7 +231,7 @@ script = ExtResource( 2 )
 [node name="SS2D_Shape_Closed" type="Node2D" parent="Terrain"]
 script = ExtResource( 1 )
 curve_bake_interval = 30.0
-_points = SubResource( 66 )
+_points = SubResource( 58 )
 material_overrides = {
 }
 shape_material = SubResource( 35 )
