@@ -12,6 +12,9 @@ var snap = Vector2.ZERO # snap vector
 var stoppingRunning = false; # purely in charge of switching to the idle animation sooner - to be ignored
 var lastNormal = Vector2.ZERO
 var leftFloor = false
+var secondaryGravity = 0
+
+var prevSGDebug = 0
 
 func get_input(delta):
 	Engine.time_scale = 0.5
@@ -29,8 +32,10 @@ func get_input(delta):
 	if jumpnt && velocity.y < 0:
 		velocity.y = velocity.y*0.55 # half-measure for global jump height
 	if !jumping and $JumpBufferTimer.time_left > 0 and $CoyoteTimer.time_left > 0: # if we hit jump, aren't off the ground yet and weren't in a jumping state before
+		snap = Vector2.ZERO
 		jumping = true # enable jumping state
 		$ControlLockTimer.start(0.15)
+		print(secondaryGravity)
 		var addForce = Vector2()
 		addForce.y = jump_speed 
 		addForce= addForce.rotated(rotation) # after we rotate, keep the pre-rotation direction
@@ -72,25 +77,25 @@ func animate():
 
 func _physics_process(delta):
 	get_input(delta)
-	var secondaryGravity =  gravity 
+	secondaryGravity =  gravity 
+	var flipped = false
 	if is_on_floor():
 		if try_vel(delta).length()<1:
 			secondaryGravity = 0
 	if gravity_off():
 		if !jumping:
 			secondaryGravity = 0
-	if secondaryGravity == 0 && !jumping:
-		velocity.y+=40
+			velocity.y+=40
+		prevSGDebug = secondaryGravity
 	if jumping and is_on_floor() and $JumpBufferTimer.time_left <= 0 and $ControlLockTimer.time_left <= 0:
 		jumping = false
-	print(rad2deg(abs(global_rotation-$FloorCast.get_collision_normal().angle() + PI/2)))
+#	print(rad2deg(abs(global_rotation-$FloorCast.get_collision_normal().angle() + PI/2)))
 	if (abs(global_rotation-$FloorCast.get_collision_normal().angle() + PI/2)<50):
 		if is_on_floor() and !jumping:
 			rotation = $FloorCast.get_collision_normal().angle() + PI/2 # align with floor when we're on it
 		else:
 			rotation = 0 # stay upright when in midair
 	velocity.x = velocity.x if abs(velocity.x)>3 else 0 # removes fractional x velocities that just cause the player to slide when idle
-	
 	snap = global_transform.y * 75 if ((!jumping && -velocity.y<secondaryGravity*delta) || (!jumping && gravity_off())) else Vector2.ZERO
 	velocity = move_and_slide_with_snap(velocity.rotated(rotation)+Vector2(0,secondaryGravity *delta),snap, -transform.y, true) # adding gravity after rotating velocity in order to make it global and factor it into the speed of uphill movement
 	velocity = velocity.rotated(-rotation) # converts velocity back to local after m_a_s_w_s() rotates it
