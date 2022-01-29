@@ -35,7 +35,7 @@ func get_input(delta):
 		snap = Vector2.ZERO
 		jumping = true # enable jumping state
 		$ControlLockTimer.start(0.15)
-		print(secondaryGravity)
+		print("ROTATION " + str(int(rotation_degrees)))
 		var addForce = Vector2()
 		addForce.y = jump_speed 
 		addForce= addForce.rotated(rotation) # after we rotate, keep the pre-rotation direction
@@ -89,19 +89,21 @@ func _physics_process(delta):
 		prevSGDebug = secondaryGravity
 	if jumping and is_on_floor() and $JumpBufferTimer.time_left <= 0 and $ControlLockTimer.time_left <= 0:
 		jumping = false
-#	print(rad2deg(abs(global_rotation-$FloorCast.get_collision_normal().angle() + PI/2)))
-	if (abs(global_rotation-$FloorCast.get_collision_normal().angle() + PI/2)<50):
-		if is_on_floor() and !jumping:
-			rotation = $FloorCast.get_collision_normal().angle() + PI/2 # align with floor when we're on it
-		else:
-			rotation = 0 # stay upright when in midair
+	if is_on_floor() and !jumping:
+		rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
+	else:
+		rotation = 0 # stay upright when in midair
 	velocity.x = velocity.x if abs(velocity.x)>3 else 0 # removes fractional x velocities that just cause the player to slide when idle
 	snap = global_transform.y * 75 if ((!jumping && -velocity.y<secondaryGravity*delta) || (!jumping && gravity_off())) else Vector2.ZERO
+	if Input.is_action_just_pressed("ui_up"):
+		print("BEFORE" + str(velocity.rotated(-rotation).round()))
 	velocity = move_and_slide_with_snap(velocity.rotated(rotation)+Vector2(0,secondaryGravity *delta),snap, -transform.y, true) # adding gravity after rotating velocity in order to make it global and factor it into the speed of uphill movement
+	if Input.is_action_just_pressed("ui_up"):
+		print("AFTER" + str(velocity.round()))
 	velocity = velocity.rotated(-rotation) # converts velocity back to local after m_a_s_w_s() rotates it
 	$Line2D.points[1] = velocity/20
 func is_on_floor():
-	return $FloorCast.is_colliding() # custom is_on_floor() detection cause the official one doesn't work very well here
+	return getShortestFloorCast().is_colliding() # custom is_on_floor() detection cause the official one doesn't work very well here
 func gravity_off():
 	
 	# 
@@ -111,3 +113,9 @@ func try_vel(delta):
 	var diff = move_and_slide_with_snap(velocity.rotated(rotation)+Vector2(0,gravity *delta),snap, -transform.y, true) # move
 	move_and_slide_with_snap(-velocity.rotated(rotation)-Vector2(0,gravity *delta),snap, -transform.y, true) # undo the move in the exact same frame
 	return diff # how much did we move?
+
+func getShortestFloorCast():
+	if ($FloorCast1.get_collision_point().length()>$FloorCast2.get_collision_point().length()):
+		return $FloorCast2
+	else:
+		return $FloorCast1
