@@ -36,9 +36,9 @@ width = 1.0
 
 [sub_resource type="Resource" id=39]
 script = ExtResource( 9 )
-position = Vector2( 833.356, 525.784 )
-point_in = Vector2( -165.65, 21.7091 )
-point_out = Vector2( 409.143, 26.8014 )
+position = Vector2( 889.356, 531.784 )
+point_in = Vector2( -245.65, 33.7091 )
+point_out = Vector2( 191.143, -7.1986 )
 properties = SubResource( 38 )
 
 [sub_resource type="Resource" id=40]
@@ -101,7 +101,7 @@ width = 1.0
 
 [sub_resource type="Resource" id=49]
 script = ExtResource( 9 )
-position = Vector2( 2755.58, -1182.93 )
+position = Vector2( 2752, -1184 )
 point_in = Vector2( 0, 0 )
 point_out = Vector2( 0, 0 )
 properties = SubResource( 48 )
@@ -114,7 +114,7 @@ width = 1.0
 
 [sub_resource type="Resource" id=51]
 script = ExtResource( 9 )
-position = Vector2( 1026.31, -1339.18 )
+position = Vector2( 896, -1184 )
 point_in = Vector2( 0, 0 )
 point_out = Vector2( 0, 0 )
 properties = SubResource( 50 )
@@ -158,7 +158,7 @@ point_in = Vector2( 200.818, -33.9412 )
 point_out = Vector2( -306.063, -19.5731 )
 properties = SubResource( 56 )
 
-[sub_resource type="Resource" id=58]
+[sub_resource type="Resource" id=62]
 script = ExtResource( 4 )
 _points = {
 0: SubResource( 37 ),
@@ -177,7 +177,7 @@ _point_order = [ 3, 16, 17, 2, 22, 11, 9, 6, 4, 5, 0 ]
 _constraints = {
 [ 0, 3 ]: 15
 }
-_next_key = 23
+_next_key = 26
 
 [sub_resource type="Resource" id=32]
 script = ExtResource( 7 )
@@ -230,8 +230,8 @@ script = ExtResource( 2 )
 
 [node name="SS2D_Shape_Closed" type="Node2D" parent="Terrain"]
 script = ExtResource( 1 )
-curve_bake_interval = 30.0
-_points = SubResource( 58 )
+curve_bake_interval = 50.0
+_points = SubResource( 62 )
 material_overrides = {
 }
 shape_material = SubResource( 35 )
