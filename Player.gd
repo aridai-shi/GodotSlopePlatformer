@@ -87,7 +87,6 @@ func _physics_process(delta):
 	debugString+= "NORMAL: "+ str(Vector2.UP.rotated(rotation)) +" (" + str(rad2deg(rotation))+")\n"
 	debugString+= "WHAT I'M AIMING FOR: "+str(floorAngle) +" (" + str(rad2deg(floorAngle.angle()+PI/2))+")\n"
 	debugString+= "DELTA ROTATION: "+str(rad2deg(abs(abs(rotation)-abs(floorAngle.angle()+PI/2))))
-	$Line2D.points[1] = (Vector2.UP.rotated(Vector2.UP.angle_to_point(floorAngle))*20).rotated(-rotation)
 	$CanvasLayer/Label.text = debugString
 	if (true):
 		if is_on_floor() and !jumping:
