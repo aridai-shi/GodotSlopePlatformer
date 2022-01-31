@@ -10,9 +10,12 @@ var speed_cap = 1200
 var gravity_speed = 550
 var snap = Vector2.ZERO # snap vector
 var stoppingRunning = false; # purely in charge of switching to the idle animation sooner - to be ignored
-var lastNormal = Vector2.ZERO
 var leftFloor = false
 var secondaryGravity = 0
+var angle = 0.0
+var oldangle = 0.0
+var dangle = 0
+var maxdangle = -1;
 
 func get_input(delta):
 	if Input.is_action_just_pressed("ui_down"):
@@ -71,8 +74,21 @@ func animate():
 	else:
 		$AnimatedSprite.animation = "ball" # the ground animations are kept if you run off a slope instead of jumping off it voluntarily
 
+func calculate_angle():
+	var oldrotation = Vector2(0,1/60)
+	angle =  (oldrotation.x - rotation) * 60 #this gives angle in degrees
+	oldrotation.x = rotation 
+	dangle = abs(oldangle) - abs(angle)
+	if (dangle >= 360 || jumping):
+		dangle = 0
+	oldangle = angle
+	if (maxdangle < abs(dangle)):
+		maxdangle = abs(dangle)
 
 func _physics_process(delta):
+	var oldfloorNormal = Vector2(0,0)
+	var oldrotation = 0
+	calculate_angle()
 	get_input(delta)
 	secondaryGravity =  gravity 
 	var flipped = false
@@ -83,17 +99,15 @@ func _physics_process(delta):
 	if jumping and is_on_floor() and $JumpBufferTimer.time_left <= 0 and $ControlLockTimer.time_left <= 0:
 		jumping = false
 	var debugString = ""
-	var floorAngle = getShortestFloorCast().get_collision_normal()
-	debugString+= "NORMAL: "+ str(Vector2.UP.rotated(rotation)) +" (" + str(rad2deg(rotation))+")\n"
-	debugString+= "WHAT I'M AIMING FOR: "+str(floorAngle) +" (" + str(rad2deg(floorAngle.angle()+PI/2))+")\n"
-	debugString+= "DELTA ROTATION: "+str(rad2deg(abs(abs(rotation)-abs(floorAngle.angle()+PI/2))))
+	debugString+= " delta angle: "+str(dangle) +"\n"
+	debugString+= "max delta angle : "+str(maxdangle)
 	$CanvasLayer/Label.text = debugString
-	if (true):
+	if (dangle<60):
 		if is_on_floor() and !jumping:
 			rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
 		else:
 			rotation = 0 # stay upright when in midair
-	else:
+	elif !is_on_floor():
 		rotation = 0
 		
 	velocity.x = velocity.x if abs(rotation_degrees)>60 || abs(velocity.x)>3 else 0 # removes fractional x velocities that just cause the player to slide when idle
@@ -106,8 +120,8 @@ func is_on_floor():
 	return getShortestFloorCast().is_colliding() # custom is_on_floor() detection cause the official one doesn't work very well here
 
 func gravity_off():
-	#abs(velocity.x)>gravity_speed && 
-	return abs(rotation_degrees)>40
+	#
+	return abs(velocity.x)>gravity_speed &&  abs(rotation_degrees)>40
 
 func try_vel(delta):
 	var diff = move_and_slide_with_snap(velocity.rotated(rotation)+Vector2(0,gravity *delta),snap, -transform.y, true) # move
