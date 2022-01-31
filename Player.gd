@@ -16,10 +16,13 @@ var angle = 0.0
 var oldangle = 0.0
 var dangle = 0
 var maxdangle = -1;
-
+var leftLen = -1
+var rightLen = -1
 func get_input(delta):
-	if Input.is_action_just_pressed("ui_down"):
-		Engine.time_scale = 0.017
+	if Input.is_action_pressed("ui_down"):
+		breakpoint
+	leftLen = global_position-$FloorCast1.get_collision_point()
+	rightLen =  global_position-$FloorCast2.get_collision_point()
 	var horiz =  Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left") # simplified left-right check
 	var jump = Input.is_action_just_pressed('ui_up')
 	var jumpnt = Input.is_action_just_released('ui_up') #for variable jump height
@@ -79,7 +82,7 @@ func calculate_angle():
 	angle =  (oldrotation.x - rotation) * 60 #this gives angle in degrees
 	oldrotation.x = rotation 
 	dangle = abs(oldangle) - abs(angle)
-	if (dangle >= 360 || jumping):
+	if (dangle >= 360 || !is_on_floor()):
 		dangle = 0
 	oldangle = angle
 	if (maxdangle < abs(dangle)):
@@ -93,7 +96,7 @@ func _physics_process(delta):
 	secondaryGravity =  gravity 
 	var flipped = false
 	if gravity_off():
-		if !jumping:
+		if !jumping && is_on_floor():
 			secondaryGravity = 10
 			velocity.y+=40
 	if jumping and is_on_floor() and $JumpBufferTimer.time_left <= 0 and $ControlLockTimer.time_left <= 0:
@@ -102,16 +105,16 @@ func _physics_process(delta):
 	debugString+= " delta angle: "+str(dangle) +"\n"
 	debugString+= "max delta angle : "+str(maxdangle)
 	$CanvasLayer/Label.text = debugString
-	if (dangle<60):
-		if is_on_floor() and !jumping:
-			rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
-		else:
-			rotation = 0 # stay upright when in midair
-	elif !is_on_floor():
-		rotation = 0
-		
+	if Input.is_action_pressed("ui_down"):
+		breakpoint
+	if is_on_floor() and !jumping:
+		rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
+	else:
+		delay_rot()
+	if Input.is_action_pressed("ui_down"):
+		breakpoint
 	velocity.x = velocity.x if abs(rotation_degrees)>60 || abs(velocity.x)>3 else 0 # removes fractional x velocities that just cause the player to slide when idle
-	snap = global_transform.y * 75 if ((!jumping && -velocity.y<secondaryGravity*delta) || (!jumping && gravity_off())) else Vector2.ZERO
+	snap = global_transform.y * 75 if ((!jumping && -velocity.y<secondaryGravity*delta) || (!jumping && gravity_off()) || ($SnapTimer.time_left<=0)) else Vector2.ZERO
 	var tempNewVel = velocity.rotated(rotation)+Vector2(0,secondaryGravity *delta)
 	velocity = move_and_slide_with_snap(tempNewVel,snap, -transform.y, true) # adding gravity after rotating velocity in order to make it global and factor it into the speed of uphill movement
 	velocity = velocity.rotated(-rotation) # converts velocity back to local after m_a_s_w_s() rotates it
@@ -129,7 +132,11 @@ func try_vel(delta):
 	return diff # how much did we move?
 
 func getShortestFloorCast():
-	if ($FloorCast1.get_collision_point().length()>$FloorCast2.get_collision_point().length()):
+	if ((global_position-$FloorCast1.get_collision_point()).length()>(global_position-$FloorCast2.get_collision_point()).length()):
 		return $FloorCast2
 	else:
 		return $FloorCast1
+func delay_rot():
+	if $SnapTimer.time_left>=0:
+		$SnapTimer.start(0.15)
+	rotation += round(lerp_angle(rotation,0,1/60000)*10)/10

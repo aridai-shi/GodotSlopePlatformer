@@ -158,7 +158,7 @@ point_in = Vector2( 200.818, -33.9412 )
 point_out = Vector2( -306.063, -19.5731 )
 properties = SubResource( 56 )
 
-[sub_resource type="Resource" id=62]
+[sub_resource type="Resource" id=58]
 script = ExtResource( 4 )
 _points = {
 0: SubResource( 37 ),
@@ -223,7 +223,7 @@ render_offset = 0.0
 [node name="Node2D" type="Node2D"]
 
 [node name="KinematicBody2D" parent="." instance=ExtResource( 14 )]
-position = Vector2( 35, 176 )
+position = Vector2( 35, 168 )
 
 [node name="Terrain" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -231,7 +231,7 @@ script = ExtResource( 2 )
 [node name="SS2D_Shape_Closed" type="Node2D" parent="Terrain"]
 script = ExtResource( 1 )
 curve_bake_interval = 50.0
-_points = SubResource( 62 )
+_points = SubResource( 58 )
 material_overrides = {
 }
 shape_material = SubResource( 35 )

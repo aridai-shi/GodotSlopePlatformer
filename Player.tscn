@@ -55,42 +55,6 @@ region = Rect2( 144, 48, 48, 48 )
 atlas = ExtResource( 2 )
 region = Rect2( 192, 48, 48, 48 )
 
-[sub_resource type="AtlasTexture" id=20]
-atlas = ExtResource( 2 )
-region = Rect2( 432, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=21]
-atlas = ExtResource( 2 )
-region = Rect2( 624, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=22]
-atlas = ExtResource( 2 )
-region = Rect2( 480, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=23]
-atlas = ExtResource( 2 )
-region = Rect2( 528, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=24]
-atlas = ExtResource( 2 )
-region = Rect2( 576, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=29]
-atlas = ExtResource( 2 )
-region = Rect2( 240, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=30]
-atlas = ExtResource( 2 )
-region = Rect2( 288, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=31]
-atlas = ExtResource( 2 )
-region = Rect2( 336, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=32]
-atlas = ExtResource( 2 )
-region = Rect2( 384, 48, 48, 48 )
-
 [sub_resource type="AtlasTexture" id=14]
 atlas = ExtResource( 2 )
 region = Rect2( 672, 48, 48, 48 )
@@ -115,6 +79,26 @@ region = Rect2( 48, 96, 48, 48 )
 atlas = ExtResource( 2 )
 region = Rect2( 96, 96, 48, 48 )
 
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 2 )
+region = Rect2( 432, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 2 )
+region = Rect2( 624, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=22]
+atlas = ExtResource( 2 )
+region = Rect2( 480, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 2 )
+region = Rect2( 528, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 2 )
+region = Rect2( 576, 48, 48, 48 )
+
 [sub_resource type="AtlasTexture" id=25]
 atlas = ExtResource( 2 )
 region = Rect2( 432, 144, 48, 48 )
@@ -135,6 +119,22 @@ region = Rect2( 576, 144, 48, 48 )
 atlas = ExtResource( 2 )
 region = Rect2( 144, 96, 48, 48 )
 
+[sub_resource type="AtlasTexture" id=29]
+atlas = ExtResource( 2 )
+region = Rect2( 240, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=30]
+atlas = ExtResource( 2 )
+region = Rect2( 288, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=31]
+atlas = ExtResource( 2 )
+region = Rect2( 336, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=32]
+atlas = ExtResource( 2 )
+region = Rect2( 384, 48, 48, 48 )
+
 [sub_resource type="SpriteFrames" id=33]
 animations = [ {
 "frames": [ SubResource( 1 ), SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 2 ), SubResource( 3 ), SubResource( 2 ), SubResource( 3 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 4 ), SubResource( 4 ), SubResource( 4 ), SubResource( 1 ), SubResource( 1 ) ],
@@ -152,20 +152,15 @@ animations = [ {
 "name": "walk",
 "speed": 20.0
 }, {
-"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 21 ), SubResource( 21 ), SubResource( 23 ), SubResource( 24 ), SubResource( 21 ), SubResource( 21 ) ],
-"loop": true,
-"name": "ball",
-"speed": 40.0
-}, {
-"frames": [ SubResource( 29 ), SubResource( 30 ), SubResource( 31 ), SubResource( 32 ) ],
-"loop": true,
-"name": "run",
-"speed": 20.0
-}, {
 "frames": [ SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
 "loop": true,
 "name": "spindash",
 "speed": 30.0
+}, {
+"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 21 ), SubResource( 21 ), SubResource( 23 ), SubResource( 24 ), SubResource( 21 ), SubResource( 21 ) ],
+"loop": true,
+"name": "ball",
+"speed": 40.0
 }, {
 "frames": [ SubResource( 25 ), SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ],
 "loop": true,
@@ -176,6 +171,11 @@ animations = [ {
 "loop": true,
 "name": "jump",
 "speed": 5.0
+}, {
+"frames": [ SubResource( 29 ), SubResource( 30 ), SubResource( 31 ), SubResource( 32 ) ],
+"loop": true,
+"name": "run",
+"speed": 20.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=34]
@@ -216,6 +216,9 @@ smoothing_speed = 10.0
 [node name="CoyoteTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="SnapTimer" type="Timer" parent="."]
+one_shot = true
+
 [node name="ControlLockTimer" type="Timer" parent="."]
 one_shot = true
 
@@ -225,12 +228,12 @@ one_shot = true
 [node name="FloorCast1" type="RayCast2D" parent="."]
 position = Vector2( -8, 0 )
 enabled = true
-cast_to = Vector2( 0, 30 )
+cast_to = Vector2( 0, 35 )
 
 [node name="FloorCast2" type="RayCast2D" parent="."]
 position = Vector2( 8, 0 )
 enabled = true
-cast_to = Vector2( 0, 30 )
+cast_to = Vector2( 0, 35 )
 
 [node name="Line2D" type="Line2D" parent="."]
 points = PoolVector2Array( 0, 0, 0, 0 )
