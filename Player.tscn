@@ -55,42 +55,6 @@ region = Rect2( 144, 48, 48, 48 )
 atlas = ExtResource( 2 )
 region = Rect2( 192, 48, 48, 48 )
 
-[sub_resource type="AtlasTexture" id=20]
-atlas = ExtResource( 2 )
-region = Rect2( 432, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=21]
-atlas = ExtResource( 2 )
-region = Rect2( 624, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=22]
-atlas = ExtResource( 2 )
-region = Rect2( 480, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=23]
-atlas = ExtResource( 2 )
-region = Rect2( 528, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=24]
-atlas = ExtResource( 2 )
-region = Rect2( 576, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=29]
-atlas = ExtResource( 2 )
-region = Rect2( 240, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=30]
-atlas = ExtResource( 2 )
-region = Rect2( 288, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=31]
-atlas = ExtResource( 2 )
-region = Rect2( 336, 48, 48, 48 )
-
-[sub_resource type="AtlasTexture" id=32]
-atlas = ExtResource( 2 )
-region = Rect2( 384, 48, 48, 48 )
-
 [sub_resource type="AtlasTexture" id=14]
 atlas = ExtResource( 2 )
 region = Rect2( 672, 48, 48, 48 )
@@ -115,6 +79,22 @@ region = Rect2( 48, 96, 48, 48 )
 atlas = ExtResource( 2 )
 region = Rect2( 96, 96, 48, 48 )
 
+[sub_resource type="AtlasTexture" id=29]
+atlas = ExtResource( 2 )
+region = Rect2( 240, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=30]
+atlas = ExtResource( 2 )
+region = Rect2( 288, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=31]
+atlas = ExtResource( 2 )
+region = Rect2( 336, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=32]
+atlas = ExtResource( 2 )
+region = Rect2( 384, 48, 48, 48 )
+
 [sub_resource type="AtlasTexture" id=25]
 atlas = ExtResource( 2 )
 region = Rect2( 432, 144, 48, 48 )
@@ -130,6 +110,26 @@ region = Rect2( 528, 144, 48, 48 )
 [sub_resource type="AtlasTexture" id=28]
 atlas = ExtResource( 2 )
 region = Rect2( 576, 144, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 2 )
+region = Rect2( 432, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 2 )
+region = Rect2( 624, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=22]
+atlas = ExtResource( 2 )
+region = Rect2( 480, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 2 )
+region = Rect2( 528, 48, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 2 )
+region = Rect2( 576, 48, 48, 48 )
 
 [sub_resource type="SpriteFrames" id=33]
 animations = [ {
@@ -148,25 +148,25 @@ animations = [ {
 "name": "walk",
 "speed": 20.0
 }, {
-"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 21 ), SubResource( 21 ), SubResource( 23 ), SubResource( 24 ), SubResource( 21 ), SubResource( 21 ) ],
+"frames": [ SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
 "loop": true,
-"name": "ball",
-"speed": 40.0
+"name": "spindash",
+"speed": 30.0
 }, {
 "frames": [ SubResource( 29 ), SubResource( 30 ), SubResource( 31 ), SubResource( 32 ) ],
 "loop": true,
 "name": "run",
 "speed": 20.0
 }, {
-"frames": [ SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
-"loop": true,
-"name": "spindash",
-"speed": 30.0
-}, {
 "frames": [ SubResource( 25 ), SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ],
 "loop": true,
 "name": "mach",
 "speed": 30.0
+}, {
+"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 21 ), SubResource( 21 ), SubResource( 23 ), SubResource( 24 ), SubResource( 21 ), SubResource( 21 ) ],
+"loop": true,
+"name": "ball",
+"speed": 40.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=34]
@@ -178,7 +178,7 @@ script = ExtResource( 1 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 33 )
 animation = "wait"
-frame = 12
+frame = 15
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -205,7 +205,19 @@ position = Vector2( -8, 0 )
 enabled = true
 cast_to = Vector2( 0, 30 )
 
+[node name="NavigationTower" type="RayCast2D" parent="."]
+cast_to = Vector2( 0, -30 )
+
 [node name="FloorCast2" type="RayCast2D" parent="."]
 position = Vector2( 8, 0 )
 enabled = true
 cast_to = Vector2( 0, 30 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="DebugLabel" type="Label" parent="CanvasLayer"]
+margin_right = 40.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

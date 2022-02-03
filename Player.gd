@@ -69,6 +69,11 @@ func animate():
 	else:
 		$AnimatedSprite.animation = "ball" # the ground animations are kept if you run off a slope instead of jumping off it voluntarily
 
+func angle_dif(from : float, to : float):
+	var ans = fposmod(to - from, TAU)
+	if ans > PI:
+		ans -= TAU
+	return ans
 
 func _physics_process(delta):
 	get_input(delta)
@@ -83,10 +88,24 @@ func _physics_process(delta):
 			velocity.y+=40
 	if jumping and is_on_floor() and $JumpBufferTimer.time_left <= 0 and $ControlLockTimer.time_left <= 0:
 		jumping = false
-	if is_on_floor() and !jumping:
-		rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
-	else:
-		rotation = 0 # stay upright when in midair
+	var floorAngleWrapped = getShortestFloorCast().get_collision_normal().angle() + PI/2
+	floorAngleWrapped = wrapf(floorAngleWrapped,0,TAU)
+	var rotationWrapped = rotation
+	rotationWrapped = wrapf(rotationWrapped,0,TAU)
+	var deltaAngle = abs(rotationWrapped-floorAngleWrapped)
+	if get_tree().get_frame()%10==0:
+		var debugText = ""
+		debugText += "FLOOR NORMAL ANGLE: " +str(rad2deg(floorAngleWrapped))
+		debugText += "\nROTATION ANGLE: " +str(rad2deg(rotationWrapped))
+		debugText += "\nDELTA ANGLE: " +str(rad2deg(deltaAngle))
+		$CanvasLayer/DebugLabel.text = debugText 
+	if deltaAngle<deg2rad(40):
+		if is_on_floor() and !jumping:
+			rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
+		else:
+			rotation = 0 # stay upright when in midair
+	if Input.is_action_pressed("ui_down"):
+		breakpoint
 	velocity.x = velocity.x if abs(velocity.x)>3 else 0 # removes fractional x velocities that just cause the player to slide when idle
 	snap = global_transform.y * 75 if ((!jumping && -velocity.y<secondaryGravity*delta) || (!jumping && gravity_off())) else Vector2.ZERO
 	var tempNewVel = velocity.rotated(rotation)+Vector2(0,secondaryGravity *delta)
@@ -97,7 +116,8 @@ func is_on_floor():
 	return getShortestFloorCast().is_colliding() # custom is_on_floor() detection cause the official one doesn't work very well here
 
 func gravity_off():
-	return abs(velocity.x)>gravity_speed && abs(rotation_degrees)>60
+	#abs(velocity.x)>gravity_speed &&
+	return abs(rotation_degrees)>60
 
 func try_vel(delta):
 	var diff = move_and_slide_with_snap(velocity.rotated(rotation)+Vector2(0,gravity *delta),snap, -transform.y, true) # move
@@ -105,7 +125,7 @@ func try_vel(delta):
 	return diff # how much did we move?
 
 func getShortestFloorCast():
-	if ($FloorCast1.get_collision_point().length()>$FloorCast2.get_collision_point().length()):
+	if ((global_position-$FloorCast1.get_collision_point()).length()>(global_position-$FloorCast2.get_collision_point()).length()):
 		return $FloorCast2
 	else:
 		return $FloorCast1
