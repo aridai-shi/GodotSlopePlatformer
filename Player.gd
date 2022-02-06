@@ -13,7 +13,6 @@ var stoppingRunning = false; # purely in charge of switching to the idle animati
 var lastNormal = Vector2.ZERO
 var leftFloor = false
 var secondaryGravity = 0
-var skidUntilStop = false
 
 func get_input(delta):
 	var horiz =  Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left") # simplified left-right check
@@ -51,9 +50,9 @@ func get_input(delta):
 	if $ControlLockTimer.time_left <= 0:
 		velocity.x+=horiz*run_speed
 	velocity.x = clamp(velocity.x,-speed_cap,speed_cap)
-	animate(horiz)
+	animate()
 	
-func animate(horiz=0):
+func animate():
 	$AnimatedSprite.speed_scale = 1
 	if(!jumping):
 		if (abs(velocity.x)>20 && !stoppingRunning) || abs(velocity.x)>100 :
@@ -65,16 +64,8 @@ func animate(horiz=0):
 				$AnimatedSprite.animation = "mach"
 			else:
 				$AnimatedSprite.animation = "run"
-			if !is_on_floor():
-				skidUntilStop = false
-			if (horiz/(1 if velocity.x==0 else velocity.x)<0 && (abs(velocity.x)>300)||skidUntilStop):
-				$AnimatedSprite.animation = "skid"
-				skidUntilStop = true
-			elif (horiz/(1 if velocity.x==0 else velocity.x)>=0) && skidUntilStop:
-				skidUntilStop = false
 		else:
 			$AnimatedSprite.animation = "idle"
-			skidUntilStop = false
 	else:
 		$AnimatedSprite.animation = "ball" # the ground animations are kept if you run off a slope instead of jumping off it voluntarily
 
@@ -98,23 +89,21 @@ func _physics_process(delta):
 	if jumping and is_on_floor() and $JumpBufferTimer.time_left <= 0 and $ControlLockTimer.time_left <= 0:
 		jumping = false
 	var floorAngleWrapped = getShortestFloorCast().get_collision_normal().angle() + PI/2
-	var rotationWrapped = Vector2.UP.rotated(rotation).angle() + PI/2
-	floorAngleWrapped = wrapf(floorAngleWrapped, -PI, PI)
-	rotationWrapped = wrapf(rotationWrapped, -PI, PI)
+	floorAngleWrapped = wrapf(floorAngleWrapped,0,TAU)
+	var rotationWrapped = rotation
+	rotationWrapped = wrapf(rotationWrapped,0,TAU)
 	var deltaAngle = abs(rotationWrapped-floorAngleWrapped)
-	if get_tree().get_frame()%2==0:
+	if get_tree().get_frame()%10==0:
 		var debugText = ""
 		debugText += "FLOOR NORMAL ANGLE: " +str(rad2deg(floorAngleWrapped))
 		debugText += "\nROTATION ANGLE: " +str(rad2deg(rotationWrapped))
 		debugText += "\nDELTA ANGLE: " +str(rad2deg(deltaAngle))
 		$CanvasLayer/DebugLabel.text = debugText 
-	if deltaAngle<deg2rad(60) || rotation==0:
+	if deltaAngle<deg2rad(40):
 		if is_on_floor() and !jumping:
 			rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
 		else:
 			rotation = 0 # stay upright when in midair
-	elif !is_on_floor():
-		rotation = 0
 	if Input.is_action_pressed("ui_down"):
 		breakpoint
 	velocity.x = velocity.x if abs(velocity.x)>3 else 0 # removes fractional x velocities that just cause the player to slide when idle
@@ -127,8 +116,8 @@ func is_on_floor():
 	return getShortestFloorCast().is_colliding() # custom is_on_floor() detection cause the official one doesn't work very well here
 
 func gravity_off():
-	#
-	return abs(velocity.x)>gravity_speed && abs(rotation_degrees)>60
+	#abs(velocity.x)>gravity_speed &&
+	return abs(rotation_degrees)>60
 
 func try_vel(delta):
 	var diff = move_and_slide_with_snap(velocity.rotated(rotation)+Vector2(0,gravity *delta),snap, -transform.y, true) # move
