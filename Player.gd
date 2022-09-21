@@ -108,7 +108,7 @@ func _physics_process(delta):
 	velocity.x = velocity.x if abs(velocity.x)>3 else 0 # removes fractional x velocities that just cause the player to slide when idle
 	snap = global_transform.y * 75 if ((!jumping && -velocity.y<secondaryGravity*delta) || (!jumping && gravity_off())) else Vector2.ZERO
 	var tempNewVel = velocity.rotated(rotation)+Vector2(0,secondaryGravity *delta)
-	velocity = move_and_slide_with_snap(tempNewVel,snap, -transform.y, true) # adding gravity after rotating velocity in order to make it global and factor it into the speed of uphill movement
+	velocity = move_and_slide(tempNewVel, -transform.y, true) # adding gravity after rotating velocity in order to make it global and factor it into the speed of uphill movement
 	velocity = velocity.rotated(-rotation) # converts velocity back to local after m_a_s_w_s() rotates it
 	
 func is_on_floor():
