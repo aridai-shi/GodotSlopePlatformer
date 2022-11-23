@@ -11,6 +11,7 @@ var jumpSpeed = -400
 var gravity = 800
 var globalVelocity = Vector2()
 var localVelocity = Vector2()
+var jumpVelocity = Vector2()
 var snap = Vector2.ZERO # snap vector
 var lastNormal = Vector2.ZERO
 var leftFloor = false
@@ -43,9 +44,11 @@ func state_process():
 			else:
 				$CoyoteTimer.start(0.15)
 			if $JumpBufferTimer.time_left > 0 and $CoyoteTimer.time_left > 0:
-				localVelocity += Vector2(0,jumpSpeed).rotated(-rotation)
+				jumpVelocity = global_transform.y * jumpSpeed
+				localVelocity = localVelocity.rotated(rotation)
 				jumpAnim = true
 				snap = Vector2.ZERO
+				state = states.AIR
 			horizontal_friction(groundFriction)
 			continue;
 		states.GROUND:
@@ -101,7 +104,6 @@ func _physics_process(delta):
 	get_input()
 	state_process()
 	localVelocity.x = localVelocity.x if abs(localVelocity.x)>3 else 0
-	snap = global_transform.y * 75 if (-localVelocity.y<gravity*delta || gravity_off()) else Vector2.ZERO
 	if state!=states.AIR:
 		rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
 	else:
@@ -112,7 +114,10 @@ func _physics_process(delta):
 	else:
 		localVelocity.y+=40
 		globalVelocity = localVelocity.rotated(rotation)
+	globalVelocity += jumpVelocity
+	jumpVelocity = Vector2.ZERO
 	globalVelocity = move_and_slide_with_snap(globalVelocity,snap,-global_transform.y)
+	snap = global_transform.y * 75 if (-localVelocity.y<gravity*delta || gravity_off()) else Vector2.ZERO
 	localVelocity = globalVelocity.rotated(-rotation)
 	animate()
 
