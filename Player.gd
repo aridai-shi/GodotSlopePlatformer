@@ -24,7 +24,7 @@ enum states {
 }
 var state : int = states.GROUND
 
-
+var sJump = false
 var horiz
 var jump
 var jumpnt
@@ -49,6 +49,7 @@ func state_process():
 				jumpAnim = true
 				snap = Vector2.ZERO
 				state = states.AIR
+				sJump = true
 			horizontal_friction(groundFriction)
 			continue;
 		states.GROUND:
@@ -108,8 +109,11 @@ func _physics_process(delta):
 		rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
 	else:
 		rotation = 0 
-	globalVelocity = localVelocity.rotated(rotation)
 	if state != states.G_MACH:
+		if sJump:
+			snap = Vector2.ZERO
+			sJump = false;
+		globalVelocity = localVelocity.rotated(rotation)
 		globalVelocity+=Vector2(0,gravity*delta)
 	else:
 		localVelocity.y+=40
