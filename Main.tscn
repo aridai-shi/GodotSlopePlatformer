@@ -1,18 +1,12 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://addons/rmsmartshape/shapes/shape_closed.gd" type="Script" id=1]
 [ext_resource path="res://Terrain.gd" type="Script" id=2]
 [ext_resource path="res://addons/rmsmartshape/vertex_properties.gd" type="Script" id=3]
 [ext_resource path="res://addons/rmsmartshape/shapes/point_array.gd" type="Script" id=4]
-[ext_resource path="res://addons/rmsmartshape/normal_range.gd" type="Script" id=5]
-[ext_resource path="res://addons/rmsmartshape/materials/edge_material_metadata.gd" type="Script" id=6]
-[ext_resource path="res://addons/rmsmartshape/materials/edge_material.gd" type="Script" id=7]
 [ext_resource path="res://addons/rmsmartshape/materials/shape_material.gd" type="Script" id=8]
 [ext_resource path="res://addons/rmsmartshape/shapes/point.gd" type="Script" id=9]
-[ext_resource path="res://smartShapes/grass00.png" type="Texture" id=10]
 [ext_resource path="res://smartShapes/checker.png" type="Texture" id=11]
-[ext_resource path="res://smartShapes/grass02.png" type="Texture" id=12]
-[ext_resource path="res://smartShapes/grass01.png" type="Texture" id=13]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=14]
 
 [sub_resource type="Resource" id=36]
@@ -123,7 +117,7 @@ properties = SubResource( 50 )
 script = ExtResource( 3 )
 texture_idx = -1
 flip = false
-width = 0.7
+width = 0.9
 
 [sub_resource type="Resource" id=53]
 script = ExtResource( 9 )
@@ -147,18 +141,31 @@ properties = SubResource( 54 )
 
 [sub_resource type="Resource" id=56]
 script = ExtResource( 3 )
+texture_idx = -1
+flip = false
+width = 2.0
+
+[sub_resource type="Resource" id=57]
+script = ExtResource( 9 )
+position = Vector2( 706.296, 224.23 )
+point_in = Vector2( 200.818, -33.9412 )
+point_out = Vector2( -362.063, 15.4269 )
+properties = SubResource( 56 )
+
+[sub_resource type="Resource" id=58]
+script = ExtResource( 3 )
 texture_idx = 0
 flip = false
 width = 1.0
 
-[sub_resource type="Resource" id=57]
+[sub_resource type="Resource" id=59]
 script = ExtResource( 9 )
-position = Vector2( 843.296, 256.23 )
-point_in = Vector2( 200.818, -33.9412 )
-point_out = Vector2( -306.063, -19.5731 )
-properties = SubResource( 56 )
+position = Vector2( 950.537, 303.687 )
+point_in = Vector2( 0, 0 )
+point_out = Vector2( 0, 0 )
+properties = SubResource( 58 )
 
-[sub_resource type="Resource" id=58]
+[sub_resource type="Resource" id=60]
 script = ExtResource( 4 )
 _points = {
 0: SubResource( 37 ),
@@ -171,49 +178,18 @@ _points = {
 11: SubResource( 51 ),
 16: SubResource( 53 ),
 17: SubResource( 55 ),
-22: SubResource( 57 )
+22: SubResource( 57 ),
+28: SubResource( 59 )
 }
-_point_order = [ 3, 16, 17, 2, 22, 11, 9, 6, 4, 5, 0 ]
+_point_order = [ 3, 16, 17, 2, 28, 22, 11, 9, 6, 4, 5, 0 ]
 _constraints = {
 [ 0, 3 ]: 15
 }
-_next_key = 26
-
-[sub_resource type="Resource" id=32]
-script = ExtResource( 7 )
-textures = [ ExtResource( 13 ) ]
-texture_normals = [  ]
-textures_corner_outer = [  ]
-textures_corner_inner = [  ]
-texture_normals_corner_outer = [  ]
-texture_normals_corner_inner = [  ]
-textures_taper_left = [ ExtResource( 10 ) ]
-textures_taper_right = [ ExtResource( 12 ) ]
-texture_normals_taper_left = [  ]
-texture_normals_taper_right = [  ]
-use_corner_texture = false
-use_taper_texture = false
-fit_mode = 0
-
-[sub_resource type="Resource" id=33]
-script = ExtResource( 5 )
-begin = 45.0
-distance = 90.0
-edgeRendering = Vector2( 0, 0 )
-
-[sub_resource type="Resource" id=34]
-script = ExtResource( 6 )
-edge_material = SubResource( 32 )
-normal_range = SubResource( 33 )
-weld = true
-render = true
-z_index = 0
-z_as_relative = true
-offset = 0.0
+_next_key = 32
 
 [sub_resource type="Resource" id=35]
 script = ExtResource( 8 )
-_edge_meta_materials = [ SubResource( 34 ) ]
+_edge_meta_materials = [  ]
 fill_textures = [ ExtResource( 11 ) ]
 fill_texture_normals = [  ]
 fill_texture_z_index = -1
@@ -231,7 +207,7 @@ script = ExtResource( 2 )
 [node name="SS2D_Shape_Closed" type="Node2D" parent="Terrain"]
 script = ExtResource( 1 )
 curve_bake_interval = 50.0
-_points = SubResource( 58 )
+_points = SubResource( 60 )
 material_overrides = {
 }
 shape_material = SubResource( 35 )
