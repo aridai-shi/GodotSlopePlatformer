@@ -23,7 +23,7 @@ enum states {
 }
 var state : int = states.GROUND
 
-
+var sJump = false
 var horiz
 var jump
 var jumpnt
@@ -43,9 +43,8 @@ func state_process():
 			else:
 				$CoyoteTimer.start(0.15)
 			if $JumpBufferTimer.time_left > 0 and $CoyoteTimer.time_left > 0:
-				localVelocity += Vector2(0,jumpSpeed).rotated(-rotation)
+				sJump = true
 				jumpAnim = true
-				snap = Vector2.ZERO
 			horizontal_friction(groundFriction)
 			continue;
 		states.GROUND:
@@ -106,8 +105,12 @@ func _physics_process(delta):
 		rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
 	else:
 		rotation = 0 
-	globalVelocity = localVelocity.rotated(rotation)
 	if state != states.G_MACH:
+		if sJump:
+			snap = Vector2.ZERO
+			localVelocity += Vector2(0,jumpSpeed)
+			sJump = false;
+		globalVelocity = localVelocity.rotated(rotation)
 		globalVelocity+=Vector2(0,gravity*delta)
 	else:
 		localVelocity.y+=40
