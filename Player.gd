@@ -1,10 +1,10 @@
 extends KinematicBody2D
 
-var runSpeed = 9.5 # acceleration
-var machSpeed = 0
-var speedCap = 1200
+var runSpeed = 12.5 # acceleration
+var machSpeed = 500
+var speedCap = 1400
 var groundFriction = 0.99
-var airFriction = 0.995
+var airFriction = 0.9925
 var frictionMultA = 0.98
 var frictionMultB = 0.96
 var jumpSpeed = -400
@@ -24,7 +24,7 @@ enum states {
 }
 var state : int = states.GROUND
 
-var sJump = false
+
 var horiz
 var jump
 var jumpnt
@@ -49,7 +49,6 @@ func state_process():
 				jumpAnim = true
 				snap = Vector2.ZERO
 				state = states.AIR
-				sJump = true
 			horizontal_friction(groundFriction)
 			continue;
 		states.GROUND:
@@ -109,17 +108,17 @@ func _physics_process(delta):
 		rotation = getShortestFloorCast().get_collision_normal().angle() + PI/2 # align with floor when we're on it
 	else:
 		rotation = 0 
+	globalVelocity = localVelocity.rotated(rotation)
 	if state != states.G_MACH:
-		if sJump:
-			snap = Vector2.ZERO
-			sJump = false;
-		globalVelocity = localVelocity.rotated(rotation)
 		globalVelocity+=Vector2(0,gravity*delta)
 	else:
 		localVelocity.y+=40
 		globalVelocity = localVelocity.rotated(rotation)
-	globalVelocity += jumpVelocity
-	jumpVelocity = Vector2.ZERO
+	if (jumpVelocity!=Vector2.ZERO):
+		globalVelocity += jumpVelocity
+		jumpVelocity = Vector2.ZERO
+	if (get_tree().get_frame()%5==0):
+		$CanvasLayer/DebugLabel.text = str(globalVelocity.rotated(-rotation))
 	globalVelocity = move_and_slide_with_snap(globalVelocity,snap,-global_transform.y)
 	snap = global_transform.y * 75 if (-localVelocity.y<gravity*delta || gravity_off()) else Vector2.ZERO
 	localVelocity = globalVelocity.rotated(-rotation)

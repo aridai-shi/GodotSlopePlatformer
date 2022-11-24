@@ -231,6 +231,3 @@ cast_to = Vector2( 0, 30 )
 [node name="DebugLabel" type="Label" parent="CanvasLayer"]
 margin_right = 40.0
 margin_bottom = 14.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
